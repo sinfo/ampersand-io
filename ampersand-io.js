@@ -2,6 +2,7 @@ var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
 var AmpersandIO = function(socket, options){
+  options || (options = {});
   if(socket){
     this.socket = socket;
   }
