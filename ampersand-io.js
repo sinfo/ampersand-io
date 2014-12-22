@@ -1,7 +1,7 @@
 var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
-var AmpersandIO = function(socket, options){
+var AmpersandIOConst = function(socket, options){
   options || (options = {});
   if(socket){
     this.socket = socket;
@@ -15,9 +15,9 @@ var AmpersandIO = function(socket, options){
   }
 };
 
-AmpersandIO.extend = extend;
+AmpersandIOConst.extend = extend;
 
-AmpersandIO.extend({
+var AmpersandIO = AmpersandIOConst.extend({
   socket: io('http://localhost:3000'),
 
   // The name of the events to be used in each operation
