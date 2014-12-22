@@ -18,7 +18,7 @@ var AmpersandIOConst = function(socket, options){
 AmpersandIOConst.extend = extend;
 
 var AmpersandIO = AmpersandIOConst.extend({
-  
+
   socket: io('http://localhost:3000'),
 
   // The name of the events to be used in each operation
@@ -96,8 +96,15 @@ var AmpersandIO = AmpersandIOConst.extend({
   },
   // Overridable function responsible for emitting the events
   emit: function (event, model, options){
-    this.socket.emit(event, model, options.callback);
+    if(options.room){
+      io.to(options.room).emit(event, model, options.callback);
+    }
+    else{
+      this.socket.emit(event, model, options.callback);
+    }
   }
 });
+
+console.log(AmpersandIO.prototype);
 
 module.exports = AmpersandIO;
