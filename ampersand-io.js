@@ -18,28 +18,26 @@ var AmpersandIOConst = function(socket, options){
 AmpersandIOConst.extend = extend;
 
 var AmpersandIO = AmpersandIOConst.extend({
+  
   socket: io('http://localhost:3000'),
 
   // The name of the events to be used in each operation
   events: {
-    onNew: 'on-model-new',
-    onUpdate: 'on-model-update',
-    fetch: 'collection-fetch',
-    onFetch: 'fetch-response'
+    myEvent: 'event-one',
+    otherEvent: 'event-two'
   },
 
   listeners: {
-    onUpdate:{ 
+    'event-three':{ 
       fn: function(data, cb){
-        var model = this.get(data.id);
-        model.save(data, null);
+        console.log('event three received');
         return cb();
       },
       active: false,
     },
-    onNew: {
+    'event-four': {
       fn: function(data, cb){
-        this.create(data,{});
+        console.log('event four received');
         return cb();
       },
       active: false,
@@ -50,8 +48,10 @@ var AmpersandIO = AmpersandIOConst.extend({
     for(var i = 0; i < arguments.length; i++){
       var l = arguments[i];
       if(this.listeners[l.listener] && this.listeners[l.listener].active){
-        console.log('listener already active');
         continue;
+      }
+      if(this.events[l.listener]){
+        l.listener = this.events[l.listener];
       }
       if(l.listener && l.fn && typeof(l.fn) == 'function'){
         this.listeners[l.listener] = {fn: l.fn};
@@ -73,8 +73,11 @@ var AmpersandIO = AmpersandIOConst.extend({
     for(var i = 0; i < listeners.length; i++){
       var listener = listeners[i];
       if(!this.listeners[listener].active){
-        this.socket.on(listener, this.listeners[listener].fn);
         this.listeners[listener].active = true;
+        if(this.events[listener]){
+          listener = this.events[listener];
+        }
+        this.socket.on(listener, this.listeners[listener].fn);
       }
     }
   },
@@ -85,7 +88,6 @@ var AmpersandIO = AmpersandIOConst.extend({
     }
     for(var i = 0; i < listeners.length; i++){
       var listener = listeners[i];
-      console.log(listener);
       if(this.listeners[listener].active){
         this.socket.removeListener(listener, this.listeners[listener].fn);
         this.listeners[listener].active = false;
