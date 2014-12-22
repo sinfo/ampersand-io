@@ -1,4 +1,4 @@
-var extend = require('extend-object');
+var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
 var AmpersandIO = function(socket, options){
@@ -14,7 +14,9 @@ var AmpersandIO = function(socket, options){
   }
 };
 
-var IO = {
+AmpersandIO.extend = extend;
+
+AmpersandIO.extend({
   socket: io('http://localhost:3000'),
 
   // The name of the events to be used in each operation
@@ -93,8 +95,6 @@ var IO = {
   emit: function (event, model, options){
     this.socket.emit(event, model, options.callback);
   }
-};
-
-extend(AmpersandIO.prototype, IO);
+});
 
 module.exports = AmpersandIO;

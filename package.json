@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/JGAntunes/ampersand-io",
   "dependencies": {
-    "extend-object": "^1.0.0",
+    "ampersand-class-extend": "^1.0.1",
     "socket.io-client": "^1.2.1"
   },
   "devDependencies": {
