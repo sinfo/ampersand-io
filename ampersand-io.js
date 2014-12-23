@@ -1,3 +1,4 @@
+/*$AMPERSAND_VERSION*/
 var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
@@ -124,6 +125,9 @@ var AmpersandIO = AmpersandIOConst.extend({
   },
   // Overridable function responsible for emitting the events
   emit: function (event, model, options){
+    if(this.events[event]){
+      event = this.events[event];
+    }
     if(typeof event === 'string'){
       event = [event];
     }
