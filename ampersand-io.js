@@ -50,24 +50,31 @@ var AmpersandIO = AmpersandIOConst.extend({
     }
   },
 
-  addListeners: function(){
-    for(var i = 0; i < arguments.length; i++){
-      var l = arguments[i];
-      if(this.listeners[l.listener] && this.listeners[l.listener].active){
+  addListeners: function(listeners){
+    for(var listenerID in listeners){
+      if(!listeners.hasOwnProperty(listenerID)){
         continue;
       }
-      if(this.events[l.listener]){
-        l.listener = this.events[l.listener];
+      if(this.listeners[listenerID] && this.listeners[listenerID].active){
+        continue;
       }
-      if(l.listener && l.fn && typeof(l.fn) == 'function'){
-        this.listeners[l.listener] = {fn: l.fn};
+      var listener = listeners[listenerID];
+      if(this.events[listenerID]){
+        listenerID = this.events[listenerID];
       }
-      if(l.active){
-        this.socket.on(l.listener, this.listeners[l.listener].fn);
-        this.listeners[l.listener].active = true;
+      if(typeof listenerID === 'string'){
+        listenerID = [listenerID];
       }
-      else{
-        this.listeners[l.listener].active = false;
+      for(var i = 0; i < listenerID.length; i++){
+        var id = listenerID[i];
+        this.listeners[id] = {fn: listener.fn};
+        if(listener.active){
+          this.socket.on(id, this.listeners[id].fn);
+          this.listeners[id].active = true;
+        }
+        else{
+          this.listeners[id].active = false;
+        }
       }
     }
   },
@@ -84,7 +91,12 @@ var AmpersandIO = AmpersandIOConst.extend({
         if(this.events[listenerID]){
           listenerID = this.events[listenerID];
         }
-        this.socket.on(listenerID, listener.fn);
+        if(typeof listenerID === 'string'){
+          listenerID = [listenerID];
+        }
+        for(var j = 0; j < listenerID.length; j++){
+          this.socket.on(listenerID[j], listener.fn);
+        }
       }
     }
   },
@@ -101,17 +113,27 @@ var AmpersandIO = AmpersandIOConst.extend({
         if(this.events[listenerID]){
           listenerID = this.events[listenerID];
         }
-        this.socket.removeListener(listenerID, listener.fn);
+        if(typeof listenerID === 'string'){
+          listenerID = [listenerID];
+        }
+        for(var j = 0; j < listenerID.length; j++){
+          this.socket.removeListener(listenerID[j], listener.fn);
+        }
       }
     }
   },
   // Overridable function responsible for emitting the events
   emit: function (event, model, options){
-    if(options.room){
-      io.to(options.room).emit(event, model, options.callback);
+    if(typeof event === 'string'){
+      event = [event];
     }
-    else{
-      this.socket.emit(event, model, options.callback);
+    for(var i = 0; i < event.length; i++){
+      if(options.room){
+        io.to(options.room).emit(event[i], model, options.callback);
+      }
+      else{
+        this.socket.emit(event[i], model, options.callback);
+      }
     }
   }
 });
