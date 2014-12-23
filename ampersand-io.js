@@ -4,6 +4,9 @@ var io = require ('socket.io-client');
 var AmpersandIOConst = function(socket, options){
   options || (options = {});
   if(socket){
+    if(typeof socket === 'string'){
+      socket = io(socket);
+    }
     this.socket = socket;
   }
   if(options.listeners){
