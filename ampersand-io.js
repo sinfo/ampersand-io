@@ -125,6 +125,7 @@ var AmpersandIO = AmpersandIOConst.extend({
   },
   // Overridable function responsible for emitting the events
   emit: function (event, model, options){
+    options || (options = {});
     if(this.events[event]){
       event = this.events[event];
     }
