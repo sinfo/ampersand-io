@@ -9,15 +9,15 @@ var AmpersandIOConst = function(socket, options){
     }
     this.socket = socket;
   }
+  if(options.events){
+    this.events = options.events;
+  }
   if(options.listeners){
     this.listeners = {};
     this.addListeners(options.listeners);
   }
   if(options.setListeners){
     this.setListeners();
-  }
-  if(options.events){
-    this.events = options.events;
   }
 };
 
