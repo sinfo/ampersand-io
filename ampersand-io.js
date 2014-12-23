@@ -77,13 +77,14 @@ var AmpersandIO = AmpersandIOConst.extend({
       listeners = Object.keys(this.listeners);
     }
     for(var i = 0; i < listeners.length; i++){
-      var listener = listeners[i];
-      if(!this.listeners[listener].active){
-        this.listeners[listener].active = true;
-        if(this.events[listener]){
-          listener = this.events[listener];
+      var listenerID = listeners[i];
+      var listener = this.listeners[listenerID];
+      if(!listener.active){
+        listener.active = true;
+        if(this.events[listenerID]){
+          listenerID = this.events[listenerID];
         }
-        this.socket.on(listener, this.listeners[listener].fn);
+        this.socket.on(listenerID, listener.fn);
       }
     }
   },
@@ -93,10 +94,14 @@ var AmpersandIO = AmpersandIOConst.extend({
       listeners = Object.keys(this.listeners);
     }
     for(var i = 0; i < listeners.length; i++){
-      var listener = listeners[i];
-      if(this.listeners[listener].active){
-        this.socket.removeListener(listener, this.listeners[listener].fn);
-        this.listeners[listener].active = false;
+      var listenerID = listeners[i];
+      var listener = this.listeners[listenerID];
+      if(listener.active){
+        listener.active = false;
+        if(this.events[listenerID]){
+          listenerID = this.events[listenerID];
+        }
+        this.socket.removeListener(listenerID, listener.fn);
       }
     }
   },
