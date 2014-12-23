@@ -111,6 +111,4 @@ var AmpersandIO = AmpersandIOConst.extend({
   }
 });
 
-console.log(AmpersandIO.prototype);
-
 module.exports = AmpersandIO;
