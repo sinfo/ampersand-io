@@ -25,7 +25,7 @@ AmpersandIOConst.extend = extend;
 
 var AmpersandIO = AmpersandIOConst.extend({
 
-  socket: io('http://localhost:3000'),
+  socket: io(),
 
   // The name of the events to be used in each operation
   events: {
