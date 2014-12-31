@@ -124,8 +124,13 @@ var AmpersandIO = AmpersandIOConst.extend({
     }
   },
   // Overridable function responsible for emitting the events
-  emit: function (event, model, options){
+  emit: function (event, data, options, cb){
     options || (options = {});
+    if(typeof options === 'function'){
+      cb = options;
+      options = {};
+    }
+    cb || (cb = options.callback);
     if(this.events[event]){
       event = this.events[event];
     }
@@ -134,10 +139,10 @@ var AmpersandIO = AmpersandIOConst.extend({
     }
     for(var i = 0; i < event.length; i++){
       if(options.room){
-        io.to(options.room).emit(event[i], model, options.callback);
+        io.to(options.room).emit(event[i], data, cb);
       }
       else{
-        this.socket.emit(event[i], {model: model, options: options}, options.callback);
+        this.socket.emit(event[i], {data: data, options: options}, cb);
       }
     }
   }
