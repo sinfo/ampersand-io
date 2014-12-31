@@ -137,7 +137,7 @@ var AmpersandIO = AmpersandIOConst.extend({
         io.to(options.room).emit(event[i], model, options.callback);
       }
       else{
-        this.socket.emit(event[i], model, options.callback);
+        this.socket.emit(event[i], {model: model, options: options}, options.callback);
       }
     }
   }
