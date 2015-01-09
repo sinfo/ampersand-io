@@ -14,11 +14,12 @@ npm install ampersand-io
 
 ### extend `AmpersandIO.extend([attributes])`
 
-Supports the normal extend behavior (through usage of [ampersand-class-extend](https://github.com/ampersandjs/ampersand-class-extend))
+Supports the normal extend behavior (through usage of [ampersand-class-extend](https://github.com/ampersandjs/ampersand-class-extend)).
+Note that neither the `events` property nor the `listeners` property are extendable through this method.
 
 ### socket `IO.socket`
 
-Override this property to specify the socket that will be used when a new object reference is created. Useful for when you have a pre-existing socket connection that you would like to use.
+Override this property to specify the socket that will be used when a new object reference is created. Useful for when you have a pre-existing socket connection that you would like to use. Defaults to an socket.io-client instance resulting from `io.connect()`.
 
 ```javascript
 var io = require('socket.io-client');
@@ -38,7 +39,7 @@ events: {
 }
 ```
 
-It also supports the usage of arrays of different events tied to a single key
+It also supports the usage of arrays of different events tied to a single key.
 
 ```javascript
 events: {
@@ -74,4 +75,24 @@ listeners: {
 		}
 	}
 }
+```
+
+### constructor/initialize `new AmpersandIO([socket], [options])`
+
+When creating an `AmpersandIO` object, you may choose to pass in either a `socket` object or a string to be used as a namespace for a new socket.io-client instance. If none of those are provided the `AmpersandIO` instance will use the `socket` object defined in the class. Options support a `listeners` and `events` object according to the ones mentioned above (note that these will override the class definitions). 
+
+```javascript
+var IO = new AmpersandIO('chat', {
+	events: {
+		receive: 'new-message'
+	},
+	listeners: {
+		receive: {
+			fn: function(data, cb){
+				console.log('New message: ' + data);
+			},
+			active: true
+		}	
+	}
+});
 ```

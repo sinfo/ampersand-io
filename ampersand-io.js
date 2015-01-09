@@ -2,7 +2,7 @@
 var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
-var AmpersandIOConst = function(socket, options){
+var IOBase = function(socket, options){
   options || (options = {});
   if(socket){
     if(typeof socket === 'string'){
@@ -17,14 +17,14 @@ var AmpersandIOConst = function(socket, options){
     this.listeners = {};
     this.addListeners(options.listeners);
   }
-  if(options.setListeners){
+  else{
     this.setListeners();
   }
 };
 
-AmpersandIOConst.extend = extend;
+IOBase.extend = extend;
 
-var AmpersandIO = AmpersandIOConst.extend({
+var AmpersandIO = IOBase.extend({
 
   socket: io.connect(),
 
@@ -123,7 +123,7 @@ var AmpersandIO = AmpersandIOConst.extend({
       }
     }
   },
-  // Overridable function responsible for emitting the events
+
   emit: function (event, data, options, cb){
     options || (options = {});
     if(typeof options === 'function'){
@@ -139,7 +139,7 @@ var AmpersandIO = AmpersandIOConst.extend({
     }
     for(var i = 0; i < event.length; i++){
       if(options.room){
-        io.to(options.room).emit(event[i], data, cb);
+        io.to(options.room).emit(event[i], {data: data, options: options}, cb);
       }
       else{
         this.socket.emit(event[i], {data: data, options: options}, cb);
