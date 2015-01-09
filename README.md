@@ -15,7 +15,7 @@ npm install ampersand-io
 ### extend `AmpersandIO.extend([attributes])`
 
 Supports the normal extend behavior (through usage of [ampersand-class-extend](https://github.com/ampersandjs/ampersand-class-extend)).
-Note that neither the `events` property nor the `listeners` property are extendable through this method.
+Note that neither the [events](#events-ioevents) property nor the [listeners](#listeners-iolisteners) property are extendable through this method.
 
 ### socket `IO.socket`
 
@@ -79,7 +79,7 @@ listeners: {
 
 ### constructor/initialize `new AmpersandIO([socket], [options])`
 
-When creating an `AmpersandIO` object, you may choose to pass in either a `socket` object or a string to be used as a namespace for a new socket.io-client instance. If none of those are provided the `AmpersandIO` instance will use the `socket` object defined in the class. Options support a `listeners` and `events` object according to the ones mentioned above (note that these will override the class definitions). 
+When creating an `AmpersandIO` object, you may choose to pass in either a `socket` object or a string to be used as a namespace for a new socket.io-client instance. If none of those are provided the `AmpersandIO` instance will use the [socket](#socket-iosocket) object defined in the class. Options support a [listeners](#listeners-iolisteners) and [events](#events-ioevents) object according to the ones mentioned above (note that these will override the class definitions). 
 
 ```javascript
 var IO = new AmpersandIO('chat', {
@@ -95,4 +95,34 @@ var IO = new AmpersandIO('chat', {
 		}	
 	}
 });
+```
+
+### addListeners `IO.addListeners(listeners)`
+
+Add a set of listeners to the listeners property of the object. Pass a `listeners` object as [described above](#listeners-iolisteners). If a listener by that name already exists and is currently active it should be [removed](#removelisteners-ioremovelistenerslisteners) first or else it will be ignored.
+
+### setListeners `IO.setListeners([listeners])`
+
+Set the given listeners active. Accepts an array of strings containing the names of the events associated with the [listeners](#listeners-iolisteners). If no argument is provided the method will set all the listeners from the current object. Nothing done to listeners which are already active.
+
+```javascript
+// sets the listeners associated with the receive and send events
+IO.setListeners(['receive', 'send']);
+
+// sets all the listeners in the IO object
+IO.setListeners();
+```
+
+### removeListeners `IO.removeListeners([listeners])`
+
+Sets the given listeners unactive. Accepts an array of strings containing the names of the events associated with the [listeners](#listeners-iolisteners). If no argument is provided the method will `remove` all the listeners from the current object. Nothing done to listeners which are already unactive.
+
+**Note:** the respective properties from the [listeners](#listeners-iolisteners) property aren't deleted. The `active` property is set to `false`.
+
+```javascript
+// removes the listeners associated with the receive and send events
+IO.removeListeners(['receive', 'send']);
+
+// sets all the listeners in the IO object
+IO.removeListeners();
 ```
