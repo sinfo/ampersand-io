@@ -1,7 +1,7 @@
 {
   "name": "ampersand-io",
-  "version": "0.1.0",
-  "description": "provides a socket.io wrapper to be used with ampersand modules",
+  "version": "0.2.0",
+  "description": "Provides a socket.io wrapper to be used with ampersand modules",
   "main": "ampersand-io.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
