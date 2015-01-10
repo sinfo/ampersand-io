@@ -123,8 +123,18 @@ Sets the given listeners unactive. Accepts an array of strings containing the na
 // removes the listeners associated with the receive and send events
 IO.removeListeners(['receive', 'send']);
 
-// sets all the listeners in the IO object
+// removes all the listeners in the IO object
 IO.removeListeners();
+```
+
+### emit `IO.emit(event, data, [options], [callback])`
+
+Method responsible for emitting events. The `event` name may be one of the events listed in the [events](#events-ioevents) property or other of your choice. The data sent to the socket connections will be an object `{data: data, options: options}` containing the arguments passed to this function. Pass `options.room` if you want to emit to a particular room and an `options.callback` that will be also passed to the socket `emit` method. You may choose to pass the `callback` function directly as an argument (`options.callback` will be ignored in this case).
+
+```javascript
+IO.emit('send', 'hi', function(){
+	console.log('acked hi');
+});
 ```
 
 ## credits
