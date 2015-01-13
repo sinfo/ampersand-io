@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/sinfo/ampersand-io.svg?branch=master)](https://travis-ci.org/sinfo/ampersand-io)
+
 ampersand-io
 ============
 
