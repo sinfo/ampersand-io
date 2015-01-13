@@ -10,6 +10,10 @@ var IOBase = function(socket, options){
     }
     this.socket = socket;
   }
+  else{
+    options = (socket || {});
+    this.socket = this.socket();
+  }
   if(options.events){
     this.events = options.events;
   }
@@ -26,30 +30,11 @@ IOBase.extend = extend;
 
 var AmpersandIO = IOBase.extend({
 
-  socket: io.connect(),
+  socket: io,
 
-  // The name of the events to be used in each operation
-  events: {
-    myEvent: 'event-one',
-    otherEvent: 'event-two'
-  },
+  events: {},
 
-  listeners: {
-    'event-three':{ 
-      fn: function(data, cb){
-        console.log('event three received');
-        return cb();
-      },
-      active: false,
-    },
-    'event-four': {
-      fn: function(data, cb){
-        console.log('event four received');
-        return cb();
-      },
-      active: false,
-    }
-  },
+  listeners: {},
 
   addListeners: function(listeners){
     for(var listenerID in listeners){
@@ -60,6 +45,7 @@ var AmpersandIO = IOBase.extend({
         continue;
       }
       var listener = listeners[listenerID];
+      this.listeners[listenerID] = listener;
       if(this.events[listenerID]){
         listenerID = this.events[listenerID];
       }
@@ -68,13 +54,8 @@ var AmpersandIO = IOBase.extend({
       }
       for(var i = 0; i < listenerID.length; i++){
         var id = listenerID[i];
-        this.listeners[id] = {fn: listener.fn};
         if(listener.active){
-          this.socket.on(id, this.listeners[id].fn);
-          this.listeners[id].active = true;
-        }
-        else{
-          this.listeners[id].active = false;
+          this.socket.on(id, listener.fn);
         }
       }
     }

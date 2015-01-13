@@ -15,7 +15,8 @@ npm install ampersand-io
 ### extend `AmpersandIO.extend([attributes])`
 
 Supports the normal extend behavior (through usage of [ampersand-class-extend](https://github.com/ampersandjs/ampersand-class-extend)).
-Note that neither the [events](#events-ioevents) property nor the [listeners](#listeners-iolisteners) property are extendable through this method.
+
+**Note** that neither the [events](#events-ioevents) property nor the [listeners](#listeners-iolisteners) property are extendable through this method.
 
 ### socket `IO.socket`
 
