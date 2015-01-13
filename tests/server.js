@@ -33,7 +33,13 @@ io.on('connection', function(socket){
 	socket.on(events.test3[1], function(request, cb){
 		cb(request);
 	});
+	
 });
 io.listen(3000);
+
+setTimeout(function timeouExit(){
+	io.close();
+	process.exit();
+}, 30000);
 
 module.exports = io;
