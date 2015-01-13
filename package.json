@@ -7,7 +7,7 @@
     "test": "npm run test-server | npm run test-client",
     "test-server": "node tests/server",
     "test-client": "browserify tests | tape-run | tap-spec",
-    "lint": "node_modules/.bin/jshint -c .jshintrc ampersand-collection-io-mixin.js"
+    "lint": "node_modules/.bin/jshint -c .jshintrc ampersand-io.js"
   },
   "pre-commit": [
     "lint"
