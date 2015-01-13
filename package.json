@@ -43,7 +43,6 @@
     "tape-run": "^0.3.0"
   },
   "testling": {
-    "preprocess": "node tests/server",
     "files": "tests/index.js",
     "browsers": [
       "ie/9..latest",
