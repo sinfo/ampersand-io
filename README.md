@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/sinfo/ampersand-io.svg?branch=master)](https://travis-ci.org/sinfo/ampersand-io)
 [![Dependency Status](https://david-dm.org/sinfo/ampersand-io.svg)](https://david-dm.org/sinfo/ampersand-io)
+[![devDependency Status](https://david-dm.org/sinfo/ampersand-io/dev-status.svg)](https://david-dm.org/sinfo/ampersand-io#info=devDependencies)
 
 ampersand-io
 ============
