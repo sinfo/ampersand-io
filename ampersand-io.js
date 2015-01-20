@@ -36,6 +36,22 @@ var AmpersandIO = IOBase.extend({
 
   listeners: {},
 
+  _setCallback: function(fn){
+    var self = this;
+    return function(){
+      fn.apply(self, arguments);
+    };
+  },
+
+  _setListener: function(event, listener){
+    this.listeners[listener]._callbacks[event] = this._setCallback(this.listeners[listener].fn);
+    this.socket.on(event, this.listeners[listener]._callbacks[event]);
+  },
+
+  _removeListener: function(event, listener){
+    this.socket.removeListener(event, this.listeners[listener]._callbacks[event]);
+  },
+
   addListeners: function(listeners){
     for(var listenerID in listeners){
       if(!listeners.hasOwnProperty(listenerID)){
@@ -44,18 +60,19 @@ var AmpersandIO = IOBase.extend({
       if(this.listeners[listenerID] && this.listeners[listenerID].active){
         continue;
       }
-      var listener = listeners[listenerID];
+      var listener = listeners[listenerID], events = listenerID;
       this.listeners[listenerID] = listener;
+      this.listeners[listenerID]._callbacks = {};
       if(this.events[listenerID]){
-        listenerID = this.events[listenerID];
+        events = this.events[listenerID];
       }
-      if(typeof listenerID === 'string'){
-        listenerID = [listenerID];
+      if(typeof events === 'string'){
+        events = [events];
       }
-      for(var i = 0; i < listenerID.length; i++){
-        var id = listenerID[i];
+      for(var i = 0; i < events.length; i++){
+        var id = events[i];
         if(listener.active){
-          this.socket.on(id, listener.fn);
+          this._setListener(id, listenerID);
         }
       }
     }
@@ -67,17 +84,17 @@ var AmpersandIO = IOBase.extend({
     }
     for(var i = 0; i < listeners.length; i++){
       var listenerID = listeners[i];
-      var listener = this.listeners[listenerID];
+      var listener = this.listeners[listenerID], events = listenerID;
       if(!listener.active){
         listener.active = true;
-        if(this.events[listenerID]){
-          listenerID = this.events[listenerID];
+        listener._callbacks = {};
+        events = this.events[listenerID] || events;
+        if(typeof events === 'string'){
+          events = [events];
         }
-        if(typeof listenerID === 'string'){
-          listenerID = [listenerID];
-        }
-        for(var j = 0; j < listenerID.length; j++){
-          this.socket.on(listenerID[j], listener.fn);
+        for(var j = 0; j < events.length; j++){
+          var id = events[j];
+          this._setListener(id, listenerID);
         }
       }
     }
@@ -89,17 +106,16 @@ var AmpersandIO = IOBase.extend({
     }
     for(var i = 0; i < listeners.length; i++){
       var listenerID = listeners[i];
-      var listener = this.listeners[listenerID];
+      var listener = this.listeners[listenerID], events = listenerID;
       if(listener.active){
         listener.active = false;
-        if(this.events[listenerID]){
-          listenerID = this.events[listenerID];
+        events = this.events[listenerID] || events;
+        if(typeof events === 'string'){
+          events = [events];
         }
-        if(typeof listenerID === 'string'){
-          listenerID = [listenerID];
-        }
-        for(var j = 0; j < listenerID.length; j++){
-          this.socket.removeListener(listenerID[j], listener.fn);
+        for(var j = 0; j < events.length; j++){
+          var id = events[j];
+          this._removeListener(id, listenerID);
         }
       }
     }

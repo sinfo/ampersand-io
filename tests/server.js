@@ -4,7 +4,8 @@ var events = {
 	requestTests: 'request',
 	test1: 'test-1',
 	test2: 'test-2',
-	test3: ['test-3-1', 'test-3-2']
+	test3: ['test-3-1', 'test-3-2'],
+	test4: 'test-4'
 };
 
 console.log('server running');
@@ -16,6 +17,7 @@ io.on('connection', function(socket){
 		socket.emit(events.test2);
 		socket.emit(events.test3[0]);
 		socket.emit(events.test3[1]);
+		socket.emit(events.test4);
 	});
 
 	socket.on('test-1', function(request, cb){

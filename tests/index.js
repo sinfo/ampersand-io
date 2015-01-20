@@ -6,7 +6,8 @@ var MyClass = AmpersandIO.extend({
 	events: {
 		test1: 'test-1',
 		test2: 'test-2',
-		test3: ['test-3-1', 'test-3-2']	
+		test3: ['test-3-1', 'test-3-2'],
+		test4: 'test-4'
 	}
 });
 
@@ -117,8 +118,7 @@ test('emit', function(t){
 
 test('listeners', function(t){
 	var IO = new MyClass('http://localhost:3000');
-
-	t.plan(20);
+	t.plan(21);
 
 	IO.addListeners({
 		test1:{
@@ -137,6 +137,12 @@ test('listeners', function(t){
 				t.pass('listening to multiple events [array]');
 			},
 			active: true
+		},
+		test4:{
+			fn: function(){
+				t.deepEqual(this, IO, 'correct \'this\' reference inside listener callback #4');
+			},
+			active: true
 		}
 	});
 
@@ -147,7 +153,7 @@ test('listeners', function(t){
 	IO.emit('request');
 	
 	setTimeout(function() {
-		IO.removeListeners(Object.keys(IO.events));
+		IO.removeListeners();
 		t.notOk(IO.listeners.test1.active, 'listener should not be active');
 		t.notOk(IO.listeners.test2.active, 'listener should not be active');
 		t.notOk(IO.listeners.test3.active, 'listener should not be active');
