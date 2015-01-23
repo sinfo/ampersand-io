@@ -20,7 +20,7 @@ var IOBase = function(socket, options){
     this.listeners = {};
     this.addListeners(options.listeners);
   }
-  if(options.initListeners){
+  else if(options.initListeners){
     this.setListeners();
   }
 };
