@@ -56,6 +56,8 @@ events: {
 
 Overridable property containing a set of listeners to be used by the socket connection. The key may be an entirely unreferenced event or one of properties from the `events` property object. The `fn` property contains the callback function to be called when the event is fired. The `active` option is a Boolean that, if set to true, will set this listener to be initialized upon construction.
 
+**Note:** `this` property inside the `fn` callback will be a reference to the whole ampersand-io instance, allowing you to access any property in your object, including the [socket](#socket-iosocket) object.
+
 ```javascript
 events:{
   myEvent: 'thisEvent',
@@ -66,6 +68,12 @@ listeners: {
 	myEvent: {
 		fn: function(data, cb){
 			console.log('This is an event callback');
+			console.log(this.events);
+			//Will output:
+			//events:{
+			//  myEvent: 'thisEvent',
+			//  arrayOfEvents: ['event1', 'event2']
+			//}
 		}
 	},
 	arrayOfEvents: {
@@ -84,7 +92,7 @@ listeners: {
 
 ### constructor/initialize `new AmpersandIO([socket], [options])`
 
-When creating an `AmpersandIO` object, you may choose to pass in either a `socket` object or a string to be used as a namespace for a new socket.io-client instance. If none of those are provided the `AmpersandIO` instance will use the [socket](#socket-iosocket) object defined in the class. Options support a [listeners](#listeners-iolisteners) and [events](#events-ioevents) object according to the ones mentioned above (note that these will override the class definitions). 
+When creating an `AmpersandIO` object, you may choose to pass in either a `socket` object or a string to be used as a namespace for a new socket.io-client instance. If none of those are provided the `AmpersandIO` instance will use the [socket](#socket-iosocket) object defined in the class. Options support a [listeners](#listeners-iolisteners) and [events](#events-ioevents) objects according to the ones mentioned above (note that these will override the class definitions) and also an `initListeners` prop which, if passed `true`, will [set the class listeners](#setlisteners-iosetlistenerslisteners) active.
 
 ```javascript
 var IO = new AmpersandIO('chat', {
