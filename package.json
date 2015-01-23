@@ -1,6 +1,6 @@
 {
   "name": "ampersand-io",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Provides a socket.io wrapper to be used with ampersand modules",
   "main": "ampersand-io.js",
   "scripts": {
