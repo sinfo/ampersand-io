@@ -7,7 +7,7 @@ var MyClass = AmpersandIO.extend({
 		test1: 'test-1',
 		test2: 'test-2',
 		test3: ['test-3-1', 'test-3-2'],
-		test4: 'test-4'
+
 	}
 });
 
@@ -118,7 +118,27 @@ test('emit', function(t){
 
 test('listeners', function(t){
 	var IO = new MyClass('http://localhost:3000');
-	t.plan(21);
+	var IOExtend = new (MyClass.extend(IO, {
+		events:{
+			test4: 'test-4'
+		},
+		listeners: {
+			test4:{
+				fn: function(){
+					t.pass('setListeners option');
+					t.deepEqual(this, IO, 'correct \'this\' reference inside listener callback #4');
+					t.ok(this.otherMethod(), 'correct \'this\' reference inside extended ampersand io #4');
+					t.ok(this.otherProp, 'correct \'this\' reference inside extended ampersand io #4');
+				}
+			}
+		},
+		otherMethod: function(){
+			return 'test method #4';
+		},
+		otherProp: 'test prop #4'
+	}))(null, {initListeners: true});
+
+	t.plan(24);
 
 	IO.addListeners({
 		test1:{
@@ -135,12 +155,6 @@ test('listeners', function(t){
 		test3:{
 			fn: function(){
 				t.pass('listening to multiple events [array]');
-			},
-			active: true
-		},
-		test4:{
-			fn: function(){
-				t.deepEqual(this, IO, 'correct \'this\' reference inside listener callback #4');
 			},
 			active: true
 		}

@@ -11,8 +11,7 @@ var IOBase = function(socket, options){
     this.socket = socket;
   }
   else{
-    options = (socket || {});
-    this.socket = this.socket();
+    this.socket = this.socket.connect();
   }
   if(options.events){
     this.events = options.events;
@@ -21,7 +20,7 @@ var IOBase = function(socket, options){
     this.listeners = {};
     this.addListeners(options.listeners);
   }
-  else{
+  if(options.initListeners){
     this.setListeners();
   }
 };
