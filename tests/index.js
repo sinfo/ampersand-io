@@ -2,36 +2,37 @@ var test = require('tape');
 var AmpersandIO = require('../ampersand-io');
 var IOClient = require('socket.io-client');
 
+console.log('Starting');
+
 var MyClass = AmpersandIO.extend({
 	events: {
 		test1: 'test-1',
 		test2: 'test-2',
 		test3: ['test-3-1', 'test-3-2'],
-
 	}
 });
 
 test('extend', function(t){
 	t.plan(3);
-
 	var testObj = {test: 'test-extend'};
 	var testMethod = {test: function(){return 'test';}};
 	var testClass = AmpersandIO.extend({events: testObj, listeners: testObj}, testMethod);
 
-	t.equal(testMethod.test(), testClass.prototype.test());
-	t.equal(testObj, testClass.prototype.events);
-	t.equal(testObj, testClass.prototype.listeners);
+	t.deepEqual(testMethod.test(), testClass.prototype.test());
+	t.deepEqual(testObj, testClass.prototype.events);
+	t.deepEqual(testObj, testClass.prototype.listeners);
 });
 
 test('constructor', function(t){
 	
 	t.test('no arguments', function(subt){
-		subt.plan(3);
+		subt.plan(4);
 		var IO = new MyClass('http://localhost:3000');
 
 		subt.ok(IO.socket, 'socket object exists');
 		subt.equal(IO.events, MyClass.prototype.events);
-		subt.equal(IO.listeners, MyClass.prototype.listeners);
+		subt.deepEqual(IO.listeners, {}, 'listeners obj should not exist on prototype class #6');
+		subt.ok(typeof MyClass.prototype.listeners === 'undefined', 'listeners obj should not exist on prototype class #6');
 	});
 
 	t.test('socket', function(subt){
@@ -126,7 +127,7 @@ test('listeners', function(t){
 			test4:{
 				fn: function(){
 					t.pass('setListeners option');
-					t.deepEqual(this, IO, 'correct \'this\' reference inside listener callback #4');
+					t.deepEqual(this, IOExtend, 'correct \'this\' reference inside listener callback #4');
 					t.ok(this.otherMethod(), 'correct \'this\' reference inside extended ampersand io #4');
 					t.ok(this.otherProp, 'correct \'this\' reference inside extended ampersand io #4');
 				}
@@ -177,7 +178,7 @@ test('listeners', function(t){
 		t.equal((IO.socket._callbacks[IO.events.test3[0]] || []).length, 0, 'listener should not be in the sockets callbacks');
 		t.equal((IO.socket._callbacks[IO.events.test3[1]] || []).length, 0, 'listener should not be in the sockets callbacks');
 
-		IO.setListeners(Object.keys(IO.events));
+		IO.setListeners();
 		t.ok(IO.listeners.test1.active, 'listener should be active');
 		t.ok(IO.listeners.test2.active, 'listener should be active');
 		t.ok(IO.listeners.test3.active, 'listener should be active');

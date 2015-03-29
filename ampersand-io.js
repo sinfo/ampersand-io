@@ -2,38 +2,36 @@
 var extend = require('ampersand-class-extend');
 var io = require ('socket.io-client');
 
-var IOBase = function(socket, options){
+var AmpersandIO = function(socket, options){
   options || (options = {});
+  this.events = options.events || this.events || {};
+
   if(socket){
+    this.socket = {};
     if(typeof socket === 'string'){
       socket = io(socket);
     }
     this.socket = socket;
   }
   else{
+    // this.socket = clone(this.socket, true);
     this.socket = this.socket.connect();
-  }
-  if(options.events){
-    this.events = options.events;
   }
   if(options.listeners){
     this.listeners = {};
     this.addListeners(options.listeners);
   }
-  else if(options.initListeners){
-    this.setListeners();
+  else{
+    this.listeners = this.listeners || {};
+    if(options.initListeners){
+      this.setListeners();
+    }
   }
 };
 
-IOBase.extend = extend;
-
-var AmpersandIO = IOBase.extend({
+AmpersandIO.prototype = {
 
   socket: io,
-
-  events: {},
-
-  listeners: {},
 
   _setCallback: function(fn){
     var self = this;
@@ -142,6 +140,8 @@ var AmpersandIO = IOBase.extend({
       }
     }
   }
-});
+};
+
+AmpersandIO.extend = extend;
 
 module.exports = AmpersandIO;
