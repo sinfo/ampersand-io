@@ -20,7 +20,9 @@
   "keywords": [
     "ampersand",
     "io",
-    "socket"
+    "socket",
+    "js",
+    "realtime"
   ],
   "author": "Joao Antunes <j.goncalo.antunes@gmail.com> (http://github.com/JGAntunes)",
   "license": "MIT",
